@@ -42,9 +42,9 @@ _add_lmt= DailyNumberLimiter(_add_max)
 _add_max_notice = f'为防止滥用，管理员一天最多可添加{_add_max}次，若需更多请用"来杯咖啡"联系维护组'
 
 # 牛老婆的成功率
-ntr_possibility = 0.5
+ntr_possibility = 0.2
 # 每人每天可牛老婆的次数
-_ntr_max=1
+_ntr_max=10
 _ntr_lmt= DailyNumberLimiter(_ntr_max)
 # 当超出次数时的提示
 _ntr_max_notice = f'为防止牛头人泛滥，一天最多可牛{_ntr_max}次，若需更多请用"来杯咖啡"联系维护组'

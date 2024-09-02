@@ -21,7 +21,7 @@ class CharacterApplicationService:
         character.id = await self.character_repository.add(character)
         return character
 
-    async def delete_charactera_by_name(self, character_name: str) -> tuple[str, str]:
+    async def delete_charactera_by_name(self, character_name: str) -> "tuple[str, str]":
         existing_character = await self.character_repository.get_by_name(character_name)
         if existing_character:
             await self.character_repository.delete(existing_character.id)
