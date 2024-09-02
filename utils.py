@@ -9,6 +9,7 @@ from infrastructure.factories import *
 from application.services import CharacterAppService
 from domain.entities import AcqMethod, Character
 from infrastructure.database.connection import AsyncSessionFactory
+from typing import Tuple
 
 img_path = os.path.join(os.path.expanduser(RES_DIR), 'img', 'wife')
 
@@ -54,7 +55,7 @@ async def update_single_character(character_sv: CharacterAppService, character: 
         raise Exception(f"更新角色时发生错误: {e}")
 
 # 备份原图片
-async def backup_character_image(image_name: str, pool_name: str) -> "tuple[str, str]":
+async def backup_character_image(image_name: str, pool_name: str) -> Tuple[str, str]:
     src_path = os.path.join(img_path, pool_name, image_name)
     backup_img_name = f"backup_{image_name}"
     backup_pool_name = pool_name

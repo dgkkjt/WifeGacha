@@ -1,6 +1,7 @@
 from typing import List, Optional, Union
 from domain.entities import Character
 from infrastructure.repositories import CharacterRepository
+from typing import Tuple
 
 class CharacterApplicationService:
     def __init__(self, character_repository: CharacterRepository):
@@ -21,7 +22,7 @@ class CharacterApplicationService:
         character.id = await self.character_repository.add(character)
         return character
 
-    async def delete_charactera_by_name(self, character_name: str) -> "tuple[str, str]":
+    async def delete_charactera_by_name(self, character_name: str) -> Tuple[str, str]:
         existing_character = await self.character_repository.get_by_name(character_name)
         if existing_character:
             await self.character_repository.delete(existing_character.id)
