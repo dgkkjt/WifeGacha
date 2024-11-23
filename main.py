@@ -707,7 +707,8 @@ async def mating_wife(bot, ev: CQEvent):
                 await event_sv.add_single_event(ug, ug_wife, "日老婆", "")
 
                 # 日老婆次数加一
-                random_increase = random.choices([1, 2, 3], weights=[5, 3, 2])[0]
+                increase_or_decrease = random.choices([1, -1], weights=[9, 1])[0]
+                random_increase = random.choices([1, 2, 3], weights=[5, 3, 2])[0] * increase_or_decrease
                 await action_sv.update_action_count(ug, ug_wife, ActionType.MATING, increase=random_increase)
             except Exception as e:
                 await bot.send(ev, "注入失败！")
@@ -721,7 +722,17 @@ async def mating_wife(bot, ev: CQEvent):
                 5: f"你的爱无可比拟，\n({ug_wife.name}好感度加5)"
             }
             await bot.send(ev, messages[random_increase])'''
-            await bot.send(ev, f"誰にでも優しくしないで, でもそこが好き！\n({ug_wife.name}好感度加{random_increase})")
+            if increase_or_decrease == 1:
+                await bot.send(ev, f"誰にでも優しくしないで, でもそこが好き！\n({ug_wife.name}好感度加{random_increase})")
+            else:
+                decrease_messages = {
+            1: f"你似乎让({ug_wife.name})有点失望了，\n好感度减1。",
+            2: f"最近是不是对({ug_wife.name})太冷淡了？\n好感度减2。",
+            3: f"你的行为让({ug_wife.name})有些难过，\n好感度减3。",
+               }
+                decrease_amount = abs(random_increase)
+                await bot.send(ev, decrease_messages[decrease_amount])
+            # 增加用户的日老婆使用次数
             # 获取特定群组的CD时间
             cd_time = cd_manager.get_group_cd(f"{group_id}")
             # 日老婆CD
