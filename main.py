@@ -43,11 +43,8 @@ _add_lmt = DailyNumberLimiter(_add_max)
 # 当超出次数时的提示
 _add_max_notice = f'为防止滥用，管理员一天最多可添加{_add_max}次，若需更多请用"来杯咖啡"联系维护组'
 
-# 牛老婆的成功率
-ntr_possibility = 0.2
-
 # 每人每天可牛老婆的次数
-_ntr_max=10
+_ntr_max= 5
 _ntr_lmt= DailyNumberLimiter(_ntr_max)
 
 # 当超出次数时的提示
@@ -141,7 +138,7 @@ sv_help = f'''
 -[添加老婆+人物名称+卡池名称(选填)+图片] 群管理员每天可以添加一次人物
 ※为防止bot被封号和数据污染请勿上传太涩与功能无关的图片※
 -[交换老婆] @某人 + 交换老婆
--[牛老婆] {ntr_possibility * 100}%概率牛到别人老婆({_ntr_max}次/日)
+-[牛老婆] 根据双方好感度概率牛到别人老婆({_ntr_max}次/日)
 -[查老婆] 加@某人可以查别人老婆，不加查自己
 -[离婚] 清楚当天老婆信息，可以重新抽老婆（管理）
 -[重置牛老婆] 加@某人可以重置别人牛的次数（管理）
@@ -599,6 +596,13 @@ async def ntr_wife(bot, ev: CQEvent):
                 return
             # 满足牛人条件，添加进交换请求列表中，防止牛人期间他人对双方发起交易，产生bug
             await ex_manager.add_exchange(user_id, target_id, group_id)
+            ugc_sv = await UGCharacterSvFactory(session).create()  # ug_c服务
+            stats_ug = await ugc_sv.get_user_group_character_stats(ug, ug_wife)
+            stats_target = await ugc_sv.get_user_group_character_stats(ug_target, ug_target_wife)
+            mating_count_diff = stats_ug.mating_count - stats_target.mating_count
+            import math
+            def sigmoid(x):return 1 / (1 + math.exp(-x))
+            ntr_possibility = sigmoid(mating_count_diff/10)
             # 事件记录服务
             event_sv = await EventSvFactory(session).create()
 
@@ -624,7 +628,7 @@ async def ntr_wife(bot, ev: CQEvent):
                 # 记录一次“牛老婆”动作,失败
                 await event_sv.add_double_event(ug, ug_target, ug_wife, ug_target_wife, "牛老婆", "失败")
                 await bot.send(ev,
-                               f'你的阴谋失败了，黄毛被干掉了，黄毛被干掉了！你还有{_ntr_max - _ntr_lmt.get_num(key)}条命',
+                               f'你的阴谋失败了，黄毛被干掉了，黄毛被干掉了！你还有{_ntr_max - _ntr_lmt.get_num(key)}条命（当前成功概率为{ntr_possibility * 100}%）',
                                at_sender=True)
             # 清除交换请求锁
             await ex_manager.remove_exchange(user_id, group_id)
