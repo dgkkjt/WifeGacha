@@ -595,7 +595,7 @@ async def ntr_wife(bot, ev: CQEvent):
                 await bot.send(ev, '需要对方有老婆才能牛', at_sender=True)
                 return
             ugc_sv = await UGCharacterSvFactory(session).create()  # ug_c服务
-            stats_ug = await ugc_sv.get_user_group_character_stats(ug, ug_wife)
+            stats_ug = await ugc_sv.get_user_group_character_stats(ug, ug_target_wife)
             stats_target = await ugc_sv.get_user_group_character_stats(ug_target, ug_target_wife)
             # 满足牛人条件，添加进交换请求列表中，防止牛人期间他人对双方发起交易，产生bug
             await ex_manager.add_exchange(user_id, target_id, group_id)
