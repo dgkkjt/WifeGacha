@@ -597,7 +597,14 @@ async def ntr_wife(bot, ev: CQEvent):
             ugc_sv = await UGCharacterSvFactory(session).create()  # ug_c服务
             stats_ug = await ugc_sv.get_user_group_character_stats(ug, ug_target_wife)
             stats_target = await ugc_sv.get_user_group_character_stats(ug_target, ug_target_wife)
-            mating_count_diff = (stats_ug.mating_count if stats_ug.mating_count is not None else 0) - (stats_target.mating_count if stats_target.mating_count is not None else 0)
+            try:
+                mating_count_ug = stats_ug.mating_count if stats_ug and stats_ug.mating_count is not None else 0
+                mating_count_target = stats_target.mating_count if stats_target and stats_target.mating_count is not None else 0
+            except AttributeError as e:
+                hoshino.logger.error(f"获取好感度时发生错误: {e}")
+                mating_count_ug = 0
+                mating_count_target = 0               
+            mating_count_diff = mating_count_ug - mating_count_target
             import math
             def sigmoid(x):return 1 / (1 + math.exp(-x))
             ntr_possibility = sigmoid(mating_count_diff/10)
