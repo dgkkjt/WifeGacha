@@ -597,12 +597,12 @@ async def ntr_wife(bot, ev: CQEvent):
             ugc_sv = await UGCharacterSvFactory(session).create()  # ug_c服务
             stats_ug = await ugc_sv.get_user_group_character_stats(ug, ug_target_wife)
             stats_target = await ugc_sv.get_user_group_character_stats(ug_target, ug_target_wife)
-            # 满足牛人条件，添加进交换请求列表中，防止牛人期间他人对双方发起交易，产生bug
-            await ex_manager.add_exchange(user_id, target_id, group_id)
-            mating_count_diff = stats_ug.mating_count - stats_target.mating_count
+            mating_count_diff = (stats_ug.mating_count if stats_ug.mating_count is not None else 0) - (stats_target.mating_count if stats_target.mating_count is not None else 0)
             import math
             def sigmoid(x):return 1 / (1 + math.exp(-x))
             ntr_possibility = sigmoid(mating_count_diff/10)
+            # 满足牛人条件，添加进交换请求列表中，防止牛人期间他人对双方发起交易，产生bug
+            await ex_manager.add_exchange(user_id, target_id, group_id)
             # 事件记录服务
             event_sv = await EventSvFactory(session).create()
 
