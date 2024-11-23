@@ -9,6 +9,7 @@ from infrastructure.factories import *
 from application.services import CharacterAppService
 from domain.entities import AcqMethod, Character
 from infrastructure.database.connection import AsyncSessionFactory
+from typing import Tuple
 
 img_path = os.path.join(os.path.expanduser(RES_DIR), 'img', 'wife')
 
@@ -54,7 +55,7 @@ async def update_single_character(character_sv: CharacterAppService, character: 
         raise Exception(f"更新角色时发生错误: {e}")
 
 # 备份原图片
-async def backup_character_image(image_name: str, pool_name: str) -> tuple[str, str]:
+async def backup_character_image(image_name: str, pool_name: str) -> Tuple[str, str]:
     src_path = os.path.join(img_path, pool_name, image_name)
     backup_img_name = f"backup_{image_name}"
     backup_pool_name = pool_name
@@ -72,10 +73,11 @@ async def restore_character_image(backup_path: str, original_path: str):
 async def delete_image_and_empty_folder(image_name: str, pool_name: str):
     file_path = os.path.join(img_path, pool_name, image_name)
     if os.path.exists(file_path):
-        await asyncio.to_thread(os.remove, file_path)
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(None, os.remove, file_path)
         folder_path = os.path.dirname(file_path)
         if not os.listdir(folder_path):
-            await asyncio.to_thread(os.rmdir, folder_path)
+            await loop.run_in_executor(None, os.rmdir, folder_path)
 
 # 重命名老婆图片
 async def rename_image_file(old_image_name: str, new_image_name: str, pool_name: str) -> None:
