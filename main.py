@@ -707,7 +707,7 @@ async def mating_wife(bot, ev: CQEvent):
                 await event_sv.add_single_event(ug, ug_wife, "日老婆", "")
 
                 # 日老婆次数加一
-                random_increase = random.choices([1, 2, 3], weights=[9, 0.8, 0.2])[0]
+                random_increase = random.choices([1, 2, 3], weights=[5, 3, 2])[0]
                 await action_sv.update_action_count(ug, ug_wife, ActionType.MATING, increase=random_increase)
             except Exception as e:
                 await bot.send(ev, "注入失败！")
