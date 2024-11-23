@@ -707,12 +707,21 @@ async def mating_wife(bot, ev: CQEvent):
                 await event_sv.add_single_event(ug, ug_wife, "日老婆", "")
 
                 # 日老婆次数加一
-                await action_sv.update_action_count(ug, ug_wife, ActionType.MATING)
+                random_increase = random.choices([1, 2, 3], weights=[9, 0.8, 0.2])[0]
+                await action_sv.update_action_count(ug, ug_wife, ActionType.MATING, increase=random_increase)
             except Exception as e:
                 await bot.send(ev, "注入失败！")
                 hoshino.logger.error(f"日老婆异常: {e}")
                 return
-            await bot.send(ev, f"誰にでも優しくしないで, でもそこが好き！\n({ug_wife.name}好感度加一)")
+            '''messages = {
+                1: f"只是小小的关心而已，\n({ug_wife.name}好感度加1)",
+                2: f"你真是一个温柔的人，\n({ug_wife.name}好感度加2)",
+                3: f"你的爱心好像是无穷的，\n({ug_wife.name}好感度加3)",
+                4: f"真是太棒了，你让她开心了很多！\n({ug_wife.name}好感度加4)",
+                5: f"你的爱无可比拟，\n({ug_wife.name}好感度加5)"
+            }
+            await bot.send(ev, messages[random_increase])'''
+            await bot.send(ev, f"誰にでも優しくしないで, でもそこが好き！\n({ug_wife.name}好感度加{random_increase})")
             # 获取特定群组的CD时间
             cd_time = cd_manager.get_group_cd(f"{group_id}")
             # 日老婆CD
