@@ -54,7 +54,7 @@ _ntr_max_notice = f'为防止牛头人泛滥，一天最多可牛{_ntr_max}次�
 _flmt = FreqLimiter(5)
 
 # 日老婆频率限制
-_mating_lmt = FreqLimiter(1800)
+_mating_lmt = FreqLimiter(120)
 
 # 档案查询频率限制
 _archive_lmt = FreqLimiter(30)
@@ -628,7 +628,7 @@ async def ntr_wife(bot, ev: CQEvent):
                 # 记录一次“牛老婆”动作,失败
                 await event_sv.add_double_event(ug, ug_target, ug_wife, ug_target_wife, "牛老婆", "失败")
                 await bot.send(ev,
-                               f'你的阴谋失败了，黄毛被干掉了，黄毛被干掉了！你还有{_ntr_max - _ntr_lmt.get_num(key)}条命（当前成功概率为{ntr_possibility * 100}%）',
+                               f'你的阴谋失败了，黄毛被干掉了，黄毛被干掉了！你还有{_ntr_max - _ntr_lmt.get_num(key)-1}条命（当前成功概率为{ntr_possibility * 100:.4f}%）',
                                at_sender=True)
             # 清除交换请求锁
             await ex_manager.remove_exchange(user_id, group_id)
