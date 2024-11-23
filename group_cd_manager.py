@@ -4,7 +4,7 @@ import os
 class GroupCDManager:
     def __init__(self, config_filename):
         self.config_file = os.path.join(os.path.dirname(__file__), config_filename)
-        self.default_cd = 120  # 默认CD时间为600秒
+        self.default_cd = 300  # 默认CD时间为600秒
         self.group_cd = self.load_or_create_config()
 
     def load_or_create_config(self):
