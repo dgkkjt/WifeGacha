@@ -608,6 +608,7 @@ async def ntr_wife(bot, ev: CQEvent):
             import math
             def sigmoid(x):return 1 / (1 + math.exp(-x))
             ntr_possibility = sigmoid(mating_count_diff/10)
+            if ntr_possibility < 0.2:ntr_possibility = 0.2 + random.uniform(0, 0.01)
             # 满足牛人条件，添加进交换请求列表中，防止牛人期间他人对双方发起交易，产生bug
             await ex_manager.add_exchange(user_id, target_id, group_id)
             # 事件记录服务
